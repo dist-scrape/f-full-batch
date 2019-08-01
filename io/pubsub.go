@@ -9,7 +9,7 @@ import (
 
 func GetQueuePublisher(topicName string, c chan []byte) {
 	ctx := context.Background()
-	proj := os.Getenv("PROJECT_ID")
+	proj := os.Getenv("GCLOUD_PROJECT")
 	client, err := pubsub.NewClient(ctx, proj)
 	if err != nil {
 		log.Fatalf("Could not create pubsub Client: %v", err)

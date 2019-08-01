@@ -15,6 +15,7 @@ import (
 // Router holds a list of functions that allow the same codebase to serve multiple cloud functions
 var router = map[string]func(b []byte){
 	"f-full-batch": fFullBatch,
+	"f-model":      fModel,
 }
 
 // HelloPubSub consumes a Pub/Sub message.
@@ -57,15 +58,20 @@ func fFullBatch(b []byte) {
 
 }
 
+func fModel(b []byte) {
+	log.Println(string(b))
+}
+
 func checkConfig() {
-	proj := os.Getenv("PROJECT_ID")
+	proj := os.Getenv("GCLOUD_PROJECT")
 	if proj == "" {
-		fmt.Fprintf(os.Stderr, "PROJECT_ID environment variable must be set.\n")
+		fmt.Fprintf(os.Stderr, "GCLOUD_PROJECT environment variable must be set.\n")
 		os.Exit(1)
 	}
 }
 
 /*
 	gcloud functions deploy f-full-batch --region europe-west2 --entry-point HelloPubSub --runtime go112 --trigger-topic full-batch
+	gcloud functions deploy f-model --region europe-west2 --entry-point HelloPubSub --runtime go112 --trigger-topic model
 
 */

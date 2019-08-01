@@ -13,7 +13,7 @@ func GetOEMDataStoreWriter(c chan model.MakeModelResponseOEM) {
 	ctx := context.Background()
 
 	// Set your Google Cloud Platform project ID.
-	projectID := os.Getenv("PROJECT_ID")
+	projectID := os.Getenv("GCLOUD_PROJECT")
 
 	// Creates a client.
 	client, err := datastore.NewClient(ctx, projectID)
