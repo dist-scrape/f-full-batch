@@ -5,6 +5,7 @@ import (
 	"cloudfunction/io"
 	"context"
 	"log"
+	"os"
 )
 
 var router = map[string]func(b []byte){
@@ -20,14 +21,15 @@ type PubSubMessage struct {
 // HelloPubSub consumes a Pub/Sub message.
 func HelloPubSub(ctx context.Context, m PubSubMessage) error {
 	log.Println(string(m.Data))
-	oems := io.GetAllOEMs()
-	for _, oem := range oems {
-		io.WriteOEM(oem)
-	}
+	router[os.Getenv("FUNCTION")](m.Data)
 	return nil
 }
 
 func fFullBatch(b []byte) {
+	oems := io.GetAllOEMs()
+	for _, oem := range oems {
+		io.WriteOEM(oem)
+	}
 
 }
 
