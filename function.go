@@ -2,29 +2,10 @@
 package p
 
 import (
-	"bytes"
+	"cloudfunction/io"
 	"context"
-	"encoding/json"
-	"io/ioutil"
 	"log"
-	"net/http"
-	"os"
 )
-
-var requestBody = []byte(`{"searchQueryModel":{"vehicleCategory":1, "makeModels":[], "sortOrder":0, "pageNumber":1}, "searchText":""}`)
-
-type Response struct {
-	MakeModels []Make `json:"makeModels"`
-}
-
-type Make struct {
-	Make     string  `json:"make"`
-	Children []Model `json:"children"`
-}
-
-type Model struct {
-	Model string `json:"model"`
-}
 
 // PubSubMessage is the payload of a Pub/Sub event. Please refer to the docs for
 // additional information regarding Pub/Sub events.
@@ -35,35 +16,11 @@ type PubSubMessage struct {
 // HelloPubSub consumes a Pub/Sub message.
 func HelloPubSub(ctx context.Context, m PubSubMessage) error {
 	log.Println(string(m.Data))
-	GetAllMakes()
+	oems := io.GetAllOEMs()
+	for _, oem := range oems {
+		io.WriteOEM(oem)
+	}
 	return nil
-}
-
-func GetAllMakes() (makes []string) {
-	makes = make([]string, 0)
-
-	resp, err := http.Post(os.Getenv("MAKES_URL"), "Application/json", bytes.NewReader(requestBody))
-	if err != nil {
-		log.Fatal(err)
-	}
-	b, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	restResponse := Response{}
-	err = json.Unmarshal(b, &restResponse)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	for _, m := range restResponse.MakeModels {
-		for _, model := range m.Children {
-			log.Println(m.Make, model.Model)
-		}
-	}
-
-	return
 }
 
 /*
