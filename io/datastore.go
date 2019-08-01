@@ -9,7 +9,7 @@ import (
 	"os"
 )
 
-func WriteOEM(c chan model.MakeModelResponseOEM) {
+func GetOEMDataStoreWriter(c chan model.MakeModelResponseOEM) {
 	ctx := context.Background()
 
 	// Set your Google Cloud Platform project ID.
