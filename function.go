@@ -3,6 +3,7 @@ package p
 
 import (
 	"cloudfunction/io"
+	"cloudfunction/model"
 	"context"
 	"log"
 	"os"
@@ -12,14 +13,8 @@ var router = map[string]func(b []byte){
 	"f-full-batch": fFullBatch,
 }
 
-// PubSubMessage is the payload of a Pub/Sub event. Please refer to the docs for
-// additional information regarding Pub/Sub events.
-type PubSubMessage struct {
-	Data []byte `json:"data"`
-}
-
 // HelloPubSub consumes a Pub/Sub message.
-func HelloPubSub(ctx context.Context, m PubSubMessage) error {
+func HelloPubSub(ctx context.Context, m model.PubSubMessage) error {
 	log.Println(string(m.Data))
 	router[os.Getenv("FUNCTION")](m.Data)
 	return nil
