@@ -1,14 +1,14 @@
 package model
 
-type Response struct {
-	OEMs []OEM `json:"makeModels"`
+type MakeModelResponse struct {
+	OEMs []MakeModelResponseOEM `json:"makeModels"`
 }
 
-type OEM struct {
-	Title  string  `json:"make"`
-	Models []Model `json:"children"`
+type MakeModelResponseOEM struct {
+	Title  string                   `json:"make"`
+	Models []MakeModelResponseModel `json:"children"`
 }
 
-type Model struct {
+type MakeModelResponseModel struct {
 	Title string `json:"model"`
 }

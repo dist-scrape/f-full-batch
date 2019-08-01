@@ -12,7 +12,7 @@ import (
 
 var requestBody = []byte(`{"searchQueryModel":{"vehicleCategory":1, "makeModels":[], "sortOrder":0, "pageNumber":1}, "searchText":""}`)
 
-func GetAllOEMs() []model.OEM {
+func GetAllOEMs() []model.MakeModelResponseOEM {
 
 	resp, err := http.Post(os.Getenv("MAKES_URL"), "Application/json", bytes.NewReader(requestBody))
 	if err != nil {
@@ -23,7 +23,7 @@ func GetAllOEMs() []model.OEM {
 		log.Fatal(err)
 	}
 
-	r := model.Response{}
+	r := model.MakeModelResponse{}
 	err = json.Unmarshal(b, &r)
 	if err != nil {
 		log.Fatal(err)

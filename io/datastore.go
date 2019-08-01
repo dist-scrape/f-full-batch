@@ -9,7 +9,7 @@ import (
 	"os"
 )
 
-func WriteOEM(o model.OEM) {
+func WriteOEM(o model.MakeModelResponseOEM) {
 	ctx := context.Background()
 
 	// Set your Google Cloud Platform project ID.
