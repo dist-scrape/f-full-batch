@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -59,7 +60,19 @@ func fFullBatch(b []byte) {
 }
 
 func fModel(b []byte) {
-	log.Println(string(b))
+	item := model.MessageSubModel{}
+	err := json.Unmarshal(b, &item)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	url := fmt.Sprintf(os.Getenv("MODEL_URL"), cleanForUrl(item.OEM), cleanForUrl(item.Model))
+	log.Println(url)
+}
+
+func cleanForUrl(in string) string {
+	in = strings.ToLower(in)
+	in = strings.ReplaceAll(in, " ", "-")
+	return in
 }
 
 func checkConfig() {
@@ -71,7 +84,7 @@ func checkConfig() {
 }
 
 /*
-	gcloud functions deploy f-full-batch --region europe-west2 --entry-point HelloPubSub --runtime go112 --trigger-topic full-batch
-	gcloud functions deploy f-model --region europe-west2 --entry-point HelloPubSub --runtime go112 --trigger-topic model
+	gcloud functions deploy f-full-batch --region europe-west2 --set-env-vars GCLOUD_PROJECT=wesbank-ta  --entry-point HelloPubSub --runtime go112 --trigger-topic full-batch
+	gcloud functions deploy f-model --region europe-west2 --set-env-vars GCLOUD_PROJECT=wesbank-ta --entry-point HelloPubSub --runtime go112 --trigger-topic model
 
 */
