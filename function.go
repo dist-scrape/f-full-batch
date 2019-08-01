@@ -7,6 +7,10 @@ import (
 	"log"
 )
 
+var router = map[string]func(b []byte){
+	"f-full-batch": fFullBatch,
+}
+
 // PubSubMessage is the payload of a Pub/Sub event. Please refer to the docs for
 // additional information regarding Pub/Sub events.
 type PubSubMessage struct {
@@ -21,6 +25,10 @@ func HelloPubSub(ctx context.Context, m PubSubMessage) error {
 		io.WriteOEM(oem)
 	}
 	return nil
+}
+
+func fFullBatch(b []byte) {
+
 }
 
 /*

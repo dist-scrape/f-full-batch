@@ -33,5 +33,5 @@ func WriteOEM(o model.OEM) {
 		log.Fatalf("Failed to save task: %v", err)
 	}
 
-	fmt.Printf("Saved make %s", o.Title)
+	fmt.Println(fmt.Sprintf("Saved make %s", o.Title))
 }
