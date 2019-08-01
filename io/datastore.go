@@ -9,7 +9,7 @@ import (
 	"os"
 )
 
-func WriteOEM(o model.MakeModelResponseOEM) {
+func WriteOEM(c chan model.MakeModelResponseOEM) {
 	ctx := context.Background()
 
 	// Set your Google Cloud Platform project ID.
@@ -24,14 +24,17 @@ func WriteOEM(o model.MakeModelResponseOEM) {
 	// Sets the kind for the new entity.
 	kind := "makes"
 	// Sets the name/ID for the new entity.
-	name := o.Title
-	// Creates a Key instance.
-	makeKey := datastore.NameKey(kind, name, nil)
 
-	// Saves the new entity.
-	if _, err := client.Put(ctx, makeKey, &o); err != nil {
-		log.Fatalf("Failed to save task: %v", err)
+	count := 0
+	for o := range c {
+		// Creates a Key instance.
+		name := o.Title
+		makeKey := datastore.NameKey(kind, name, nil)
+		// Saves the new entity.
+		if _, err := client.Put(ctx, makeKey, &o); err != nil {
+			log.Fatalf("Failed to save task: %v", err)
+		}
+		count++
 	}
-
-	fmt.Println(fmt.Sprintf("Saved make %s", o.Title))
+	fmt.Println(fmt.Sprintf("Saved makes: %i", count))
 }

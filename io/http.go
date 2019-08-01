@@ -24,8 +24,7 @@ func GetAllOEMs() []model.MakeModelResponseOEM {
 	}
 
 	r := model.MakeModelResponse{}
-	err = json.Unmarshal(b, &r)
-	if err != nil {
+	if err = json.Unmarshal(b, &r); err != nil {
 		log.Fatal(err)
 	}
 

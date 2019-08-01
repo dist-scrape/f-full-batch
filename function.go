@@ -9,6 +9,7 @@ import (
 	"os"
 )
 
+// Router holds a list of functions that allow the same codebase to serve multiple cloud functions
 var router = map[string]func(b []byte){
 	"f-full-batch": fFullBatch,
 }
@@ -21,10 +22,13 @@ func HelloPubSub(ctx context.Context, m model.PubSubMessage) error {
 }
 
 func fFullBatch(b []byte) {
+	c := make(chan model.MakeModelResponseOEM)
+	go io.WriteOEM(c)
 	oems := io.GetAllOEMs()
 	for _, oem := range oems {
-		io.WriteOEM(oem)
+		c <- oem
 	}
+	close(c)
 
 }
 
