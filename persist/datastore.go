@@ -18,15 +18,17 @@ func GetDataStoreWriter(ctx context.Context, projectID string, kind string, in c
 		log.Fatalf("Failed to create client: %v", err)
 	}
 
-	for row := range in {
-		// Sets the name/ID for the new entity.
-		name := row.GetID()
-		k := datastore.NameKey(kind, name, nil)
+	go func() {
+		for row := range in {
+			// Sets the name/ID for the new entity.
+			name := row.GetID()
+			k := datastore.NameKey(kind, name, nil)
 
-		// Saves the new entity.
-		if _, err := client.Put(ctx, k, &row); err != nil {
-			log.Fatalf("Failed to save task: %v", err)
+			// Saves the new entity.
+			if _, err := client.Put(ctx, k, &row); err != nil {
+				log.Fatalf("Failed to save task: %v", err)
+			}
 		}
+	}()
 
-	}
 }
