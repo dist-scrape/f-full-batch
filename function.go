@@ -14,7 +14,7 @@ var router = map[string]func(b []byte){
 }
 
 func ProcessAllOEMs(w http.ResponseWriter, r *http.Request) {
-	bus.ProcessAllOEMs(context.Background(), false, false)
+	bus.ProcessAllOEMs(context.Background(), true, true)
 }
 
 // HelloPubSub consumes a Pub/Sub message.
