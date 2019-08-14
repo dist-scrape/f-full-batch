@@ -19,7 +19,7 @@ func ProcessAllOEMs(ctx context.Context, writeToDB, writeToQueue bool) {
 	persist.GetDataStoreWriter(ctx, os.Getenv("GCLOUD_PROJECT"), "makes", w)
 
 	q := make(chan []byte, 100)
-	persist.GetQueuePublisher(ctx, os.Getenv("GCLOUD_PROJECT"), "makes", q)
+	persist.GetQueuePublisher(ctx, os.Getenv("GCLOUD_PROJECT"), domain.QueueOEMs, q)
 
 	c := scrape.GetAllOEMs(domain.GetOEMURL())
 	for row := range c {

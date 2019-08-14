@@ -1,15 +1,20 @@
-// Package p contains a Pub/Sub Cloud Function.
 package p
 
 import (
+	"cloudfunction/bus"
 	"cloudfunction/domain"
 	"context"
 	"log"
+	"net/http"
 	"os"
 )
 
 var router = map[string]func(b []byte){
 	"f-full-batch": fFullBatch,
+}
+
+func ProcessAllOEMs(w http.ResponseWriter, r *http.Request) {
+	bus.ProcessAllOEMs(context.Background(), false, false)
 }
 
 // HelloPubSub consumes a Pub/Sub message.
@@ -28,6 +33,8 @@ func fFullBatch(b []byte) {
 }
 
 /*
+
+	gcloud functions deploy all-oems --region europe-west2 --set-env-vars GCLOUD_PROJECT=wesbank-ta --entry-point ProcessAllOEMs --runtime go112 --trigger-http
 	gcloud functions deploy f-full-batch --region europe-west2 --entry-point HelloPubSub --runtime go112 --trigger-topic full-batch
 
 */
