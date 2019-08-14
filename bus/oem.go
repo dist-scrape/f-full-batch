@@ -18,7 +18,7 @@ func ProcessAllOEMs(ctx context.Context, writeToDB, writeToQueue bool) {
 	//TODO: use fan-out pattern to ensure
 
 	log.Println("All OEMs -> connecting to db")
-	w := make(chan persist.HasID, 100)
+	w := make(chan string, 100)
 	persist.GetDataStoreWriter(ctx, os.Getenv("GCLOUD_PROJECT"), "makes", w)
 	defer close(w)
 
@@ -31,7 +31,7 @@ func ProcessAllOEMs(ctx context.Context, writeToDB, writeToQueue bool) {
 	c := scrape.GetAllOEMs(domain.GetOEMURL())
 	for row := range c {
 		if writeToDB {
-			w <- item{Title: string(row)}
+			w <- string(row)
 		}
 		if writeToQueue {
 			q <- []byte(row)
@@ -59,12 +59,4 @@ func ProcessAllOEMPages(ctx context.Context, url string) {
 
 	log.Println("All OEM pages -> done")
 
-}
-
-type item struct {
-	Title string
-}
-
-func (i item) GetID() string {
-	return i.Title
 }
