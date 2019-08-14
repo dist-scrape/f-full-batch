@@ -2,8 +2,7 @@
 package p
 
 import (
-	"cloudfunction/io"
-	"cloudfunction/model"
+	"cloudfunction/arc/model"
 	"context"
 	"log"
 	"os"
@@ -21,10 +20,10 @@ func HelloPubSub(ctx context.Context, m model.PubSubMessage) error {
 }
 
 func fFullBatch(b []byte) {
-	oems := io.GetAllOEMs()
-	for _, oem := range oems {
-		io.WriteOEM(oem)
-	}
+	//oems := persist.()
+	//for _, oem := range oems {
+	//	persist.WriteOEM(oem)
+	//}
 
 }
 
