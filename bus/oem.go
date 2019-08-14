@@ -1,30 +1,37 @@
-package ingress
+package bus
 
 import (
+	"cloudfunction/domain"
 	"cloudfunction/persist"
+	"cloudfunction/scrape"
 	"context"
 	"log"
-	"net/http"
 	"os"
 )
 
-func FunctionOEM(w http.ResponseWriter, r *http.Request) {
+func GetAllOEMs(ctx context.Context, writeToDB, writeToQueue bool) {
 
-}
-
-func SubscribeOEM(ctx context.Context, b []byte) {
 	log.Println("Starting full batch")
+
+	//TODO: use fan-out pattern to ensure
+
 	w := make(chan persist.HasID, 100)
 	persist.GetDataStoreWriter(ctx, os.Getenv("GCLOUD_PROJECT"), "makes", w)
+
 	q := make(chan []byte, 100)
 	persist.GetQueuePublisher(ctx, os.Getenv("GCLOUD_PROJECT"), "makes", q)
 
-	//c := scrape.ScrapeOEMS()
-	//for row := range c {
-	//	w <- item{Title: row}
-	//	q <- []byte(row)
-	//}
+	c := scrape.GetAllOEMs(domain.GetOEMURL())
+	for row := range c {
+		if writeToDB {
+			w <- item{Title: string(row)}
+		}
+		if writeToQueue {
+			q <- []byte(row)
+		}
+	}
 	close(w)
+	close(q)
 
 }
 
