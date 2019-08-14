@@ -9,7 +9,7 @@ import (
 	"os"
 )
 
-func GetAllOEMs(ctx context.Context, writeToDB, writeToQueue bool) {
+func ProcessAllOEMs(ctx context.Context, writeToDB, writeToQueue bool) {
 
 	log.Println("Starting full batch")
 

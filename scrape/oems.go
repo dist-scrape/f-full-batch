@@ -2,7 +2,6 @@ package scrape
 
 import (
 	"bytes"
-	"cloudfunction/arc/model"
 	"cloudfunction/domain"
 	"encoding/json"
 	"fmt"
@@ -30,7 +29,7 @@ func GetAllOEMs(OEMsUrl string) chan domain.OEM {
 			log.Fatal(err)
 		}
 
-		r := model.MakeModelResponse{}
+		r := domain.MakeModelResponse{}
 		if err = json.Unmarshal(b, &r); err != nil {
 			log.Fatal(err)
 		}

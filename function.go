@@ -2,7 +2,7 @@
 package p
 
 import (
-	"cloudfunction/arc/model"
+	"cloudfunction/domain"
 	"context"
 	"log"
 	"os"
@@ -13,7 +13,7 @@ var router = map[string]func(b []byte){
 }
 
 // HelloPubSub consumes a Pub/Sub message.
-func HelloPubSub(ctx context.Context, m model.PubSubMessage) error {
+func HelloPubSub(ctx context.Context, m domain.PubSubMessage) error {
 	log.Println(string(m.Data))
 	router[os.Getenv("FUNCTION")](m.Data)
 	return nil
