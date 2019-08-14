@@ -19,6 +19,7 @@ func GetDataStoreWriter(ctx context.Context, projectID string, kind string, in c
 	}
 
 	go func() {
+		defer client.Close()
 		for row := range in {
 			// Sets the name/ID for the new entity.
 			name := row.GetID()
@@ -26,7 +27,9 @@ func GetDataStoreWriter(ctx context.Context, projectID string, kind string, in c
 
 			// Saves the new entity.
 			if _, err := client.Put(ctx, k, &row); err != nil {
-				log.Fatalf("Failed to save task: %v", err)
+				log.Println("~~~ Persistence issue ~~~")
+				log.Println("kind:", kind, "name:", name)
+				log.Println("Failed to save task: %v", err)
 			}
 		}
 	}()

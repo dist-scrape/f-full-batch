@@ -13,6 +13,7 @@ func GetQueuePublisher(ctx context.Context, project, topicName string, c chan []
 	}
 	t := client.Topic(topicName)
 	go func() {
+		defer client.Close()
 		for o := range c {
 			t.Publish(ctx, &pubsub.Message{
 				Data: o,
