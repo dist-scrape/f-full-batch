@@ -12,6 +12,11 @@ func GetOEMURL() string {
 	return string(sDec)
 }
 
+func DecodeBase64(in string) string {
+	sDec, _ := base64.StdEncoding.DecodeString(in)
+	return string(sDec)
+}
+
 func GetOEMPagesURL() string {
 	OEMsURLEnc := "aHR0cHM6Ly93d3cuYXV0b3RyYWRlci5jby56YS9jYXJzLWZvci1zYWxlLw=="
 	sDec, _ := base64.StdEncoding.DecodeString(OEMsURLEnc)

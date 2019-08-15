@@ -58,14 +58,24 @@ func GetAllOEMPages(baseURL string, oem domain.OEM) chan domain.OEMPageURL {
 			return
 		}
 
-		html := string(b)
-		i := strings.Index(html, "e-results-total")
-		html = string(html[i+17 : i+22])
-		html = strings.ReplaceAll(html, " ", "")
+		htmlPage := string(b)
+		i := strings.Index(htmlPage, "e-results-total")
+		htmlSeg := string(htmlPage[i+17 : i+22])
+		htmlSegSub := strings.ReplaceAll(htmlSeg, " ", "")
+		htmlSegSubClean := strings.ReplaceAll(htmlSegSub, "</sp", "")
+		htmlSegSubClean = strings.ReplaceAll(htmlSegSubClean, "</s", "")
+		htmlSegSubClean = strings.ReplaceAll(htmlSegSubClean, "</", "")
 
-		rows, err := strconv.Atoi(html)
+		rows, err := strconv.Atoi(htmlSegSubClean)
 		if err != nil {
 			fmt.Println(err)
+			fmt.Println("~ Context: GetAllOEMPages ~")
+			fmt.Println(baseURL, oem)
+			fmt.Println(htmlSeg)
+			fmt.Println(htmlSegSub)
+			fmt.Println(htmlSegSubClean)
+			fmt.Println("~ Fin ~")
+			//panic(err)
 			return
 		}
 		pages := rows / 20
@@ -104,9 +114,12 @@ func GetAllOEMPageResultUrls(resultsPageURL domain.OEMPageURL) chan domain.OEMPa
 			if idx == -1 {
 				return
 			}
-			html = string(html[idx+8 : len(html)-idx-8])
+
+			//fmt.Println(len(html), idx+8, len(html)-idx-8, idx+8 + len(html)-idx-8)
+
+			html = html[idx+8:]
 			idxQ := strings.Index(html, "\"")
-			href := string(html[0:idxQ])
+			href := html[0:idxQ]
 			if strings.Index(href, "car-for-sale") == -1 {
 				continue
 			}
